@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -36,12 +36,15 @@ export class AgentsPage extends React.PureComponent {
   render() {
     const { agents, connections, channels } = this.props;
     return (
-      agents && connections && channels ? 
+      agents && connections && channels ?
         <Grid container>
           <MainContentHeader
             title={messages.title}
             sizesForHideInlineElement={['sm', 'xs']}
           />
+          <Link to="/auth/twitter" target="_self">twitter</Link>
+          <Link to="/auth/github" target="_self">github</Link>
+          <Link to="/session" target="_self">session</Link>
           <AgentsCards
             agents={agents}
             onImportAgent={this.props.onImportAgent}

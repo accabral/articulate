@@ -1,11 +1,15 @@
+import HapiAuthCookie from '@hapi/cookie';
+import HapiAuthBell from 'bell';
 import Blipp from 'blipp';
 import h2o2 from 'h2o2';
 import Hapi from 'hapi';
 import Webpack from 'webpack';
 import argv from './argv';
+import AuthStrategies from './auth/strategies';
 import logger from './logger';
 import * as WebpackPlugin from './middlewares/hapi-webpack-plugin';
 import port from './port';
+import Routes from './routes';
 
 const isDev = process.env.NODE_ENV !== 'production';
 const ngrok =
@@ -38,24 +42,36 @@ const hot = {
 const init = async () => {
 
   try {
+
     await server.register([
       {
+        plugin: HapiAuthBell,
+        options: {}
+      },
+      {
+        plugin: HapiAuthCookie,
+        options: {}
+      }, {
         plugin: WebpackPlugin,
         options: { compiler, assets, hot }
       }, {
-        plugin: h2o2
+        plugin: h2o2,
+        options: {
+          passThrough: true,
+          localStatePassThrough: true,
+          xforward: true
+        }
       }, {
-        plugin: Blipp
+        plugin: Blipp,
+        options: {
+          showAuth: true,
+          showStart: false
+        }
       }
     ]);
-  }
-  catch (error) {
-    return logger.error(error);
-  }
-
-  try {
+    await AuthStrategies(server);
     await server.start();
-    //await server.route(Routes);
+    await server.route(Routes);
   }
   catch (error) {
     return logger.error(error);
@@ -74,8 +90,10 @@ const init = async () => {
   else {
     logger.appStarted(port, prettyHost);
   }
-  // eslint-disable-next-line no-console
-  console.log(server.plugins.blipp.text());
+  if (process.env.DEBUG_ROUTES) {
+    // eslint-disable-next-line no-console
+    console.log(server.plugins.blipp.text());
+  }
   return server;
 };
 

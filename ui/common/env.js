@@ -20,7 +20,7 @@ const normalizeApi = () => {
         protocol: process.env,
         host: process.env.API_HOST,
         port: process.env.API_PORT,
-        fallback: 'http://api:7500',
+        fallback: 'http://api:7500'
       });
     }
   }
@@ -29,7 +29,21 @@ const normalizeApi = () => {
 
 const env = {
   API_URL: normalizeApi(),
+  AUTH_TWITTER_KEY: process.env.AUTH_TWITTER_KEY,
+  AUTH_TWITTER_SECRET: process.env.AUTH_TWITTER_SECRET,
+  AUTH_GITHUB_KEY: process.env.AUTH_GITHUB_KEY,
+  AUTH_GITHUB_SECRET: process.env.AUTH_GITHUB_SECRET,
+  SESSION_SECRET: process.env.SESSION_SECRET,
+  PROVIDERS: process.env.PROVIDERS ? process.env.PROVIDERS.split(';') : []
 };
 
 export default env;
-export const { API_URL } = env;
+export const {
+  API_URL,
+  AUTH_TWITTER_KEY,
+  AUTH_TWITTER_SECRET,
+  AUTH_GITHUB_KEY,
+  AUTH_GITHUB_SECRET,
+  SESSION_SECRET,
+  PROVIDERS
+} = env;

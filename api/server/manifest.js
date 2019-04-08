@@ -1,13 +1,11 @@
+import Blipp from 'blipp';
 import Boom from 'boom';
 import Confidence from 'confidence';
-import Dotenv from 'dotenv';
 import Nes from 'nes';
 import Schmervice from 'schmervice';
 import Toys from 'toys';
 import Package from '../package.json';
 
-// Pull .env into process.env
-Dotenv.config({ path: `${__dirname}/.env` });
 const redisOptions = {
     host: process.env.REDIS_HOST || 'redis',
     port: process.env.REDIS_PORT || 6379,
@@ -53,6 +51,14 @@ module.exports = new Confidence.Store({
             {
                 plugin: Schmervice,
                 options: {}
+            },
+            {
+                plugin: Blipp,
+                options: {
+                    showAuth: true,
+                    showScope: true,
+                    showStart: false
+                }
             },
             {
 
