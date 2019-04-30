@@ -5,26 +5,39 @@
  *
  */
 
-import React from 'react';
-import { Link } from 'react-router-dom';
+import {
+  CircularProgress,
+  Grid,
+} from '@material-ui/core';
 import PropTypes from 'prop-types';
+import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { push } from 'react-router-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 
-import { Grid, CircularProgress } from '@material-ui/core';
+import injectSaga from 'utils/injectSaga';
+import {
+  exportAgent,
+  importAgent,
+  loadAgents,
+  loadChannels,
+  loadConnections,
+} from '../App/actions';
+import {
+  makeSelectAgentExport,
+  makeSelectAgents,
+  makeSelectChannels,
+  makeSelectConnections,
+} from '../App/selectors';
+import AgentsCards from './Components/AgentsCards';
+import ConnectionsCards from './Components/ConnectionsCards';
 
 import MainContentHeader from './Components/MainContentHeader';
-import AgentsCards from './Components/AgentsCards';
-
-import injectSaga from 'utils/injectSaga';
+import messages from './messages';
 
 import saga from './saga';
-import messages from './messages';
-import { makeSelectAgents, makeSelectAgentExport, makeSelectConnections, makeSelectChannels } from '../App/selectors';
-import { loadAgents, exportAgent, importAgent, loadConnections, loadChannels } from '../App/actions';
-import { push } from 'react-router-redux';
-import ConnectionsCards from './Components/ConnectionsCards';
 
 /* eslint-disable react/prefer-stateless-function */
 export class AgentsPage extends React.PureComponent {
@@ -64,7 +77,7 @@ export class AgentsPage extends React.PureComponent {
           />
         </Grid>
         :
-        <CircularProgress style={{position: 'absolute', top: '40%', left: '49%'}}/>
+        <CircularProgress style={{ position: 'absolute', top: '40%', left: '49%' }} />
     );
   }
 }
@@ -84,7 +97,7 @@ AgentsPage.propTypes = {
     PropTypes.array,
     PropTypes.bool,
   ]),
-  agentExport: PropTypes.object
+  agentExport: PropTypes.object,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -109,7 +122,7 @@ function mapDispatchToProps(dispatch) {
     },
     onImportAgent: (agent) => {
       dispatch(importAgent(agent));
-    }
+    },
   };
 }
 

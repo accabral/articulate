@@ -1,7 +1,7 @@
 import {
   AUTH_TWITTER_KEY,
   AUTH_TWITTER_SECRET,
-  SESSION_SECRET
+  SESSION_SECRET,
 } from '../../../common/env';
 
 export default {
@@ -18,8 +18,16 @@ export default {
       getParams: {
         include_email: 'true',
         skip_status: 'true',
-        include_entities: 'false'
-      }
-    }
-  }
+        include_entities: 'false',
+      },
+    },
+    location: (request) => {
+      console.log(`twitter::location`); // TODO: REMOVE!!!!
+      // console.log({ info: request.info, headers: request.headers }); // TODO: REMOVE!!!!
+      const location = `${request.headers['x-forwarded-proto']}://${request.info.host}${request.path}`;
+      console.log({ location }); // TODO: REMOVE!!!!
+
+      return location;
+    },
+  },
 };
