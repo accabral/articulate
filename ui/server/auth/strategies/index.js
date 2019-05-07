@@ -1,9 +1,16 @@
 import github from './github';
 import session from './session';
+import simple from './simple';
 import twitter from './twitter';
 
-export default async function (server) {
-  await server.auth.strategy(session.name, session.scheme, session.options);
-  await server.auth.strategy(twitter.name, twitter.scheme, twitter.options);
-  await server.auth.strategy(github.name, github.scheme, github.options);
+export default async function(server) {
+  await [
+    github,
+    session,
+    twitter,
+    simple,
+  ].forEach(
+    async ({ name, scheme, options }) => {
+      await server.auth.strategy(name, scheme, options);
+    });
 }

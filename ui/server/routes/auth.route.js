@@ -1,12 +1,12 @@
 import Boom from 'boom';
 import _ from 'lodash';
-import { PROVIDERS } from '../../common/env';
+import { AUTH_PROVIDERS } from '../../common/env';
 import api from '../services/api';
 
 const handler = async (request, h) => {
   try {
     if (!request.auth.isAuthenticated) {
-      return h(Boom.unauthorized(`Authentication failed: ${request.auth.error.message}`));
+      return Boom.unauthorized(`Authentication failed: ${request.auth.error.message}`);
     }
 
     const { profile, token, secret, provider } = request.auth.credentials;
@@ -17,8 +17,8 @@ const handler = async (request, h) => {
         provider,
         token,
         secret,
-        profile
-      }
+        profile,
+      },
     };
     let user = await api.get(`/user/search/email/${data.email}`);
     if (user && !_.isNil(user.id)) {
@@ -35,7 +35,7 @@ const handler = async (request, h) => {
     const credentials = {
       id: user.id,
       name: user.name,
-      email: user.email
+      email: user.email,
     };
     await request.cookieAuth.set(credentials);
     return h.redirect('/');
@@ -43,18 +43,19 @@ const handler = async (request, h) => {
   catch (err) {
     console.error(err);
   }
-
 };
-const authRoutes = PROVIDERS.map((provider) => {
-  return {
-    method: 'GET',
-    path: `/auth/${provider}`,
-    config: {
-      auth: provider,
-      handler
-    }
-  };
-});
+
+const authRoutes = AUTH_PROVIDERS.map((provider) => ({
+  method: ['GET'],
+  path: `/auth/${provider}`,
+  config: {
+    auth: {
+      mode: 'try',
+      strategy: provider,
+    },
+    handler,
+  },
+}));
 module.exports = [
   ...authRoutes,
   {
@@ -67,7 +68,19 @@ module.exports = [
         console.log(request.auth); // TODO: REMOVE!!!!
         // Return a message using the information from the session
         return `Hello, ${request.auth.credentials.name}!`;
-      }
-    }
-  }
+      },
+    },
+  },{
+    method: 'POST',
+    path: '/auth/basic',
+    config: {
+      auth: 'simple', // <-- require a session for this, so we have access to the twitter profile
+      handler: (request, h) => {
+        console.log(`auth.route::session::handler`); // TODO: REMOVE!!!!
+        console.log(request.auth); // TODO: REMOVE!!!!
+        // Return a message using the information from the session
+        return `Hello, ${request.auth.credentials.name}!`;
+      },
+    },
+  },
 ];

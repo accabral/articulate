@@ -21,13 +21,6 @@ export default {
         include_entities: 'false',
       },
     },
-    location: (request) => {
-      console.log(`twitter::location`); // TODO: REMOVE!!!!
-      // console.log({ info: request.info, headers: request.headers }); // TODO: REMOVE!!!!
-      const location = `${request.headers['x-forwarded-proto']}://${request.info.host}${request.path}`;
-      console.log({ location }); // TODO: REMOVE!!!!
-
-      return location;
-    },
+    location: (request) => `${request.headers['x-forwarded-proto']}://${request.info.host}${request.path}`,
   },
 };

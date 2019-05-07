@@ -57,6 +57,7 @@ export class AgentsPage extends React.PureComponent {
           />
           <Link to="/auth/twitter" target="_self">twitter</Link>
           <Link to="/auth/github" target="_self">github</Link>
+          <Link to="/auth/simple" target="_self">simple</Link>
           <Link to="/session" target="_self">session</Link>
           <AgentsCards
             agents={agents}

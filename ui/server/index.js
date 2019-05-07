@@ -1,3 +1,4 @@
+import HapiBasicAuth from '@hapi/basic';
 import HapiAuthCookie from '@hapi/cookie';
 import HapiAuthBell from 'bell';
 import Blipp from 'blipp';
@@ -25,7 +26,7 @@ const prettyHost = customHost || 'localhost';
 
 const server = Hapi.server({
   port,
-  host
+  host,
 });
 
 const compiler = Webpack(Config);
@@ -46,28 +47,32 @@ const init = async () => {
     await server.register([
       {
         plugin: HapiAuthBell,
-        options: {}
+        options: {},
+      },
+      {
+        plugin: HapiBasicAuth,
+        options: {},
       },
       {
         plugin: HapiAuthCookie,
-        options: {}
+        options: {},
       }, {
         plugin: WebpackPlugin,
-        options: { compiler, assets, hot }
+        options: { compiler, assets, hot },
       }, {
         plugin: h2o2,
         options: {
           passThrough: true,
           localStatePassThrough: true,
-          xforward: true
-        }
+          xforward: true,
+        },
       }, {
         plugin: Blipp,
         options: {
           showAuth: true,
-          showStart: false
-        }
-      }
+          showStart: false,
+        },
+      },
     ]);
     await AuthStrategies(server);
     await server.start();

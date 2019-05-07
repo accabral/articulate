@@ -20,7 +20,7 @@ const normalizeApi = () => {
         protocol: process.env,
         host: process.env.API_HOST,
         port: process.env.API_PORT,
-        fallback: 'http://api:7500'
+        fallback: 'http://api:7500',
       });
     }
   }
@@ -34,7 +34,8 @@ const env = {
   AUTH_GITHUB_KEY: process.env.AUTH_GITHUB_KEY,
   AUTH_GITHUB_SECRET: process.env.AUTH_GITHUB_SECRET,
   SESSION_SECRET: process.env.SESSION_SECRET,
-  PROVIDERS: process.env.PROVIDERS ? process.env.PROVIDERS.split(';') : []
+  AUTH_PROVIDERS: process.env.AUTH_PROVIDERS ? process.env.AUTH_PROVIDERS.split(';') : [],
+  AUTH_SIMPLE: process.env.AUTH_SIMPLE === 'true',
 };
 
 export default env;
@@ -45,5 +46,6 @@ export const {
   AUTH_GITHUB_KEY,
   AUTH_GITHUB_SECRET,
   SESSION_SECRET,
-  PROVIDERS
+  AUTH_PROVIDERS,
+  AUTH_SIMPLE,
 } = env;
